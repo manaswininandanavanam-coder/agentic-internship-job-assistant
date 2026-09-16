@@ -3,3 +3,9 @@ venv/
 __pycache__/
 uploads/
 *.pyc
+# Local databases and generated RAG data
+data/chroma_db/
+database/*.db
+
+# Test/local files
+*.log
