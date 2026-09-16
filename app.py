@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from agents.resume_agent import ResumeAgent
 from agents.orchestrator import InternshipOrchestrator
 from agents.application_tracking_agent import ApplicationTrackingAgent
+from database.database import initialize_database
 
 from rag.resume_indexer import ResumeIndexer
 from rag.career_rag import CareerRAG
@@ -28,6 +29,8 @@ load_dotenv()
 app = Flask(__name__)
 
 CORS(app)
+# Initialize SQLite database
+initialize_database()
 
 
 # ============================================================
