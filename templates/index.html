@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Internship AI Assistant</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🤖 Internship AI Assistant</h1>
+
+    <p>
+        AI-powered internship discovery and career assistance
+    </p>
+
+    <form
+        action="/find-internships"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <label>Upload Your Resume</label>
+
+        <input
+            type="file"
+            name="resume"
+            accept=".pdf"
+            required
+        >
+
+        <label>What internship are you looking for?</label>
+
+        <input
+            type="text"
+            name="internship_query"
+            placeholder="Example: AI ML internship"
+            required
+        >
+
+        <button type="submit">
+            🚀 FIND INTERNSHIPS
+        </button>
+
+    </form>
+
+
+    {% if message %}
+
+    <div class="message">
+
+        <h3>{{ message }}</h3>
+
+    </div>
+
+    {% endif %}
+
+
+    {% if resume_name %}
+
+    <div class="resume-text">
+
+        <h3>📄 Resume</h3>
+
+        <p>{{ resume_name }}</p>
+
+    </div>
+
+    {% endif %}
+
+
+    {% if agentic_results and agentic_results.jobs %}
+
+    <h2>🎯 Recommended Internships</h2>
+
+
+    {% for item in agentic_results.jobs %}
+
+    <div class="job-card">
+
+        <h2>{{ item.job.title }}</h2>
+
+        <p>
+            <strong>🏢 Company:</strong>
+            {{ item.job.company }}
+        </p>
+
+        <p>
+            <strong>📍 Location:</strong>
+            {{ item.job.location }}
+        </p>
+
+        <h3>
+            🎯 Match Score:
+            {{ item.match.score }}%
+        </h3>
+
+
+        <h3>✅ Matched Skills</h3>
+
+        <ul>
+
+            {% for skill in item.match.matched_skills %}
+
+            <li>{{ skill }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+
+        <h3>⚠️ Missing Skills</h3>
+
+        <ul>
+
+            {% for skill in item.match.missing_skills %}
+
+            <li>{{ skill }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+
+        <h3>📚 Skill Gap Roadmap</h3>
+
+        {% for gap in item.skill_gaps.skill_gaps %}
+
+        <div class="skill-gap">
+
+            <strong>{{ gap.skill }}</strong>
+
+            <p>
+                <strong>Importance:</strong>
+                {{ gap.importance }}
+            </p>
+
+            <p>{{ gap.reason }}</p>
+
+            <ol>
+
+                {% for step in gap.learning_steps %}
+
+                <li>{{ step }}</li>
+
+                {% endfor %}
+
+            </ol>
+
+        </div>
+
+        {% endfor %}
+
+
+        <a
+            href="{{ item.job.apply_url }}"
+            target="_blank"
+            class="apply-button"
+        >
+            🔗 APPLY NOW
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
