@@ -6,7 +6,9 @@ class ResumeRetriever:
 
     def __init__(self):
 
-        print("Initializing Resume Retriever...")
+        print(
+            "Initializing Resume Retriever..."
+        )
 
         self.embedding_service = (
             EmbeddingService()
@@ -27,6 +29,7 @@ class ResumeRetriever:
     ):
 
         if not query:
+
             return []
 
         print(
@@ -88,6 +91,7 @@ class ResumeRetriever:
         )
 
         if not results:
+
             return ""
 
         context_parts = []

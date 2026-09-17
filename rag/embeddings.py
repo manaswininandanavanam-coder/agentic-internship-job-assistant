@@ -1,36 +1,78 @@
-from sentence_transformers import SentenceTransformer
+import hashlib
+import math
+import re
 
 
 class EmbeddingService:
 
     def __init__(self):
+        print("Initializing lightweight embedding service...")
+        print("Using TF-IDF style local embeddings.")
+        print("No PyTorch or Sentence Transformers required.")
 
-        print("Loading embedding model...")
+    def _tokenize(self, text):
+        if not text:
+            return []
 
-        self.model = SentenceTransformer(
-            "all-MiniLM-L6-v2"
-        )
+        text = text.lower()
 
-        print("Embedding model loaded successfully.")
+        # Keep words and common technical terms
+        tokens = re.findall(r"[a-zA-Z0-9+#.]+", text)
+
+        return tokens
+
+    def _hash_index(self, token, dimensions):
+        digest = hashlib.md5(
+            token.encode("utf-8")
+        ).hexdigest()
+
+        number = int(digest, 16)
+
+        return number % dimensions
 
     def create_embedding(self, text):
 
         if not text:
             return []
 
-        embedding = self.model.encode(
-            text
+        dimensions = 384
+
+        tokens = self._tokenize(text)
+
+        if not tokens:
+            return [0.0] * dimensions
+
+        vector = [0.0] * dimensions
+
+        for token in tokens:
+
+            index = self._hash_index(
+                token,
+                dimensions
+            )
+
+            vector[index] += 1.0
+
+        # Normalize vector
+        magnitude = math.sqrt(
+            sum(value * value for value in vector)
         )
 
-        return embedding.tolist()
+        if magnitude > 0:
+
+            vector = [
+                value / magnitude
+                for value in vector
+            ]
+
+        return vector
 
     def create_embeddings(self, texts):
 
         if not texts:
             return []
 
-        embeddings = self.model.encode(
-            texts
-        )
-
-        return embeddings.tolist()
+        return [
+            self.create_embedding(text)
+            for text in texts
+        ]

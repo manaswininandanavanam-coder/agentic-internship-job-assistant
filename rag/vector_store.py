@@ -29,7 +29,8 @@ class VectorStore:
         metadata=None
     ):
 
-        if not metadata:
+        if metadata is None:
+
             metadata = {
                 "source": "resume"
             }
@@ -53,7 +54,11 @@ class VectorStore:
         metadatas=None
     ):
 
-        if not metadatas:
+        if not texts:
+            return
+
+        if metadatas is None:
+
             metadatas = [
                 {
                     "source": "resume"
@@ -77,6 +82,27 @@ class VectorStore:
         query_embedding,
         top_k=3
     ):
+
+        if not query_embedding:
+
+            return {
+                "documents": [[]],
+                "distances": [[]]
+            }
+
+        count = self.collection.count()
+
+        if count == 0:
+
+            return {
+                "documents": [[]],
+                "distances": [[]]
+            }
+
+        top_k = min(
+            top_k,
+            count
+        )
 
         results = self.collection.query(
             query_embeddings=[query_embedding],
