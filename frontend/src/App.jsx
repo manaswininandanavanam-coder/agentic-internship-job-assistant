@@ -26,7 +26,7 @@ import {
   Zap,
 } from "lucide-react";
 
-const API_BASE = "http://127.0.0.1:5000";
+const API_BASE = "https://agentic-internship-job-assistant-1.onrender.com";
 
 function App() {
   const [resumeFile, setResumeFile] = useState(null);

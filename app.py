@@ -181,23 +181,14 @@ def home():
 
 @app.route("/api/health", methods=["GET"])
 def health():
-
     return jsonify({
-
         "status": "healthy",
-
         "backend": "Flask",
-
         "frontend": "React",
-
         "ai": "Gemini",
-
         "jobs": "Adzuna",
-
-        "rag": "ChromaDB + Sentence Transformers",
-
+        "rag": "ChromaDB + Lightweight Embeddings",
         "database": "SQLite"
-
     })
 
 
