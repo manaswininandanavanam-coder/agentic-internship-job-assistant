@@ -95,27 +95,66 @@ tracking_agent = ApplicationTrackingAgent()
 
 
 # ============================================================
-# INITIALIZE RAG
+# INITIALIZE AI AGENTS
 # ============================================================
 
 print("\n")
-print("Initializing Resume Indexer...")
+print("================================")
+print("INITIALIZING AI AGENTS")
+print("================================")
 
-resume_indexer = ResumeIndexer()
 
+resume_agent = ResumeAgent()
+
+orchestrator = InternshipOrchestrator()
+
+tracking_agent = ApplicationTrackingAgent()
+
+
+# ============================================================
+# LAZY INITIALIZE RAG
+# ============================================================
 
 print("\n")
-print("Initializing Career RAG...")
+print("================================")
+print("AI AGENTS INITIALIZED")
+print("================================")
 
-career_rag = CareerRAG()
+print("RAG components will be loaded only when required.")
 
 
-print("\n")
-print("All agents initialized.")
+resume_indexer = None
+career_rag = None
 
-print("RAG Resume Indexer initialized.")
 
-print("Career RAG initialized.")
+def get_resume_indexer():
+
+    global resume_indexer
+
+    if resume_indexer is None:
+
+        print("\nInitializing Resume Indexer...")
+
+        resume_indexer = ResumeIndexer()
+
+        print("Resume Indexer initialized successfully.")
+
+    return resume_indexer
+
+
+def get_career_rag():
+
+    global career_rag
+
+    if career_rag is None:
+
+        print("\nInitializing Career RAG...")
+
+        career_rag = CareerRAG()
+
+        print("Career RAG initialized successfully.")
+
+    return career_rag
 
 
 # ============================================================
@@ -135,7 +174,6 @@ def home():
             "message": "Agentic AI Career Assistant Backend",
             "status": "running"
         })
-
 
 # ============================================================
 # HEALTH CHECK
@@ -396,26 +434,12 @@ def find_internships():
         print("RAG RESUME INDEXING")
         print("================================")
 
-
         try:
-
-            resume_indexer.index_resume(
-                resume_text
-            )
-
-
-            print(
-                "Resume indexed successfully."
-            )
-
-
+          get_resume_indexer().index_resume(resume_text)
+          print("Resume indexed successfully.")
         except Exception as e:
-
-            print(
-                "Resume indexing failed:"
-            )
-
-            print(e)
+          print("Resume indexing failed:")
+          print(e)
 
 
         # ====================================================
@@ -665,12 +689,7 @@ Missing Skills:
 
         try:
 
-            resume_context = (
-                career_rag
-                .retrieve_resume_context(
-                    rag_query
-                )
-            )
+            resume_context = get_career_rag().retrieve_resume_context(rag_query)
 
 
             print(
